@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import {isArray} from 'lodash';
+import {isArray, isFunction} from 'lodash';
 
 import defaultAnimations from '../../themes/animations';
 import {randomString} from '../../util';
@@ -17,9 +17,8 @@ const Li = styled('li', {
 class TreeNode extends PureComponent {
     onClick() {
         const {node, onToggle} = this.props;
-        const {toggled} = node;
         if (onToggle) {
-            onToggle(node, !toggled);
+            onToggle(node, !node.toggled);
         }
     }
 
@@ -45,11 +44,11 @@ class TreeNode extends PureComponent {
     }
 
     renderChildren(decorators) {
-        const {animations, decorators: propDecorators, node, style, onToggle} = this.props;
+        const {animations, decorators: propDecorators, node, style, onToggle, onSelect} = this.props;
 
         if (node.loading) {
             return (
-                <Loading {...{decorators, style}}/>
+                <Loading decorators={decorators} style={style}/>
             );
         }
 
@@ -62,7 +61,10 @@ class TreeNode extends PureComponent {
             <Ul style={style.subtree}>
                 {children.map(child => (
                     <TreeNode
-                        {...{onToggle, animations, style}}
+                        onSelect={onSelect}
+                        onToggle={onToggle}
+                        animations={animations}
+                        style={style}
                         decorators={propDecorators}
                         key={child.id || randomString()}
                         node={child}
@@ -73,13 +75,20 @@ class TreeNode extends PureComponent {
     }
 
     render() {
-        const {node, style} = this.props;
+        const {node, style, onSelect} = this.props;
         const decorators = this.decorators();
         const animations = this.animations();
         const {...restAnimationInfo} = animations.drawer;
         return (
             <Li style={style.base}>
-                <NodeHeader {...{decorators, animations, node, style}} onClick={() => this.onClick()}/>
+                <NodeHeader
+                    decorators={decorators}
+                    animations={animations}
+                    node={node}
+                    style={style}
+                    onClick={() => this.onClick()}
+                    onSelect={isFunction(onSelect) ? (() => onSelect(node)) : undefined}
+                />
                 <Drawer restAnimationInfo={{...restAnimationInfo}}>
                     {node.toggled ? this.renderChildren(decorators, animations) : null}
                 </Drawer>
@@ -89,6 +98,7 @@ class TreeNode extends PureComponent {
 }
 
 TreeNode.propTypes = {
+    onSelect: PropTypes.func,
     onToggle: PropTypes.func,
     style: PropTypes.object.isRequired,
     node: PropTypes.object.isRequired,
