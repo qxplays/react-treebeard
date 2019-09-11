@@ -66,6 +66,7 @@ class TreeNode extends PureComponent {
                         decorators={propDecorators}
                         key={child.id || randomString()}
                         node={child}
+                        parent={node}
                     />
                 ))}
             </Ul>
@@ -92,6 +93,7 @@ TreeNode.propTypes = {
     onToggle: PropTypes.func,
     style: PropTypes.object.isRequired,
     node: PropTypes.object.isRequired,
+    parent: PropTypes.object,
     decorators: PropTypes.object.isRequired,
     animations: PropTypes.oneOfType([
         PropTypes.object,
