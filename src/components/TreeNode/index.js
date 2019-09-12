@@ -17,10 +17,10 @@ const Li = styled("li", {
 
 class TreeNode extends PureComponent {
   onClick() {
-    const { node, onToggle } = this.props;
+    const { node, onToggle, parent } = this.props;
     const { toggled } = node;
     if (onToggle) {
-      onToggle(node, !toggled);
+      onToggle(node, !toggled, parent);
     }
   }
 
