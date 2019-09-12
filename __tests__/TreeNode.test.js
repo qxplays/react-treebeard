@@ -13,7 +13,6 @@ const renderComponent = (props = {}) => {
   const wrapper = shallow(
     <TreeNode
       node={data}
-      parent={node}
       decorators={defaultDecorators}
       animations={defaultAnimations}
       style={defaultTheme}
