@@ -38,7 +38,7 @@ describe("<TreeNode/>", () => {
       it("should return the selected node and toggled in false", () => {
         const wrapper = renderComponent();
         wrapper.simulateClickOnHeader();
-        expect(onToggle).toBeCalledWith(data, false, parent);
+        expect(onToggle).toBeCalledWith(data, false, undefined);
       });
     });
     describe("and node.toggle is false", () => {
@@ -46,7 +46,7 @@ describe("<TreeNode/>", () => {
         const node = { ...data, toggled: false };
         const wrapper = renderComponent({ node });
         wrapper.simulateClickOnHeader();
-        expect(onToggle).toBeCalledWith(node, true, parent);
+        expect(onToggle).toBeCalledWith(node, true, undefined);
       });
     });
   });
